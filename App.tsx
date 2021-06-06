@@ -1,4 +1,5 @@
 import 'react-native-gesture-handler';
+import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -8,8 +9,11 @@ import { AuthStack } from './src/navigations/AuthStack';
 export default function App() {
   const loggedIn = false;
   return (
-    <NavigationContainer>
-      {loggedIn ? <MainStack /> : <AuthStack />}
-    </NavigationContainer>
+    <>
+      <NavigationContainer>
+        {loggedIn ? <MainStack /> : <AuthStack />}
+      </NavigationContainer>
+      <StatusBar style='auto'></StatusBar>
+    </>
   );
 }

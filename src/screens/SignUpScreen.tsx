@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
-import { Button, Title, TextInput } from 'react-native-paper';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Button, TextInput, Title } from 'react-native-paper';
 
 type Props = {};
 
-export const LoginScreen: React.FC<Props> = (props) => {
+export const SignUpScreen: React.FC<Props> = (props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
   return (
     <SafeAreaView style={styles.flex}>
       <View style={[styles.flex, styles.paddingLarge]}>
-        <Title style={styles.marginBottom}>ログイン</Title>
+        <Title style={styles.marginBottom}>新規登録</Title>
         <TextInput
           label='Email'
           value={email}
@@ -23,24 +24,24 @@ export const LoginScreen: React.FC<Props> = (props) => {
           label='Password'
           value={password}
           onChangeText={setPassword}
-          autoCapitalize='none'
           secureTextEntry
           style={styles.marginBottom}
         />
         <Button
           mode='contained'
           style={[styles.paddingSm, styles.marginBottom]}
-          onPress={() => {}} //TODO: 仮の値を入れている
+          onPress={() => {}} // TODO:仮の値を入れている
         >
-          ログイン
+          新規登録
         </Button>
         <Button
           style={[styles.paddingSm, styles.marginBottom]}
-          onPress={() => {}} //TODO: 仮の値を入れている
+          onPress={() => {}} // TODO:仮の値を入れている
         >
-          アカウントを作成する
+          既存アカウントでログインする
         </Button>
       </View>
+      <Text>SignUpScreen</Text>
     </SafeAreaView>
   );
 };
