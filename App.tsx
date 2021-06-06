@@ -1,20 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import { GiftedChat, IMessage } from 'react-native-gifted-chat';
-import { ChatScreen } from './src/screens/ChatScreen';
+import 'react-native-gesture-handler';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+import { MainStack } from './src/navigations/MainStack';
+import { AuthStack } from './src/navigations/AuthStack';
 
 export default function App() {
-  return <ChatScreen />;
+  const loggedIn = false;
+  return (
+    <NavigationContainer>
+      {loggedIn ? <MainStack /> : <AuthStack />}
+    </NavigationContainer>
+  );
 }
