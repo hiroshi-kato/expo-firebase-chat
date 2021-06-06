@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/core';
 import React, { useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { Button, TextInput, Title } from 'react-native-paper';
@@ -5,6 +6,7 @@ import { Button, TextInput, Title } from 'react-native-paper';
 type Props = {};
 
 export const SignUpScreen: React.FC<Props> = (props) => {
+  const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -36,7 +38,9 @@ export const SignUpScreen: React.FC<Props> = (props) => {
         </Button>
         <Button
           style={[styles.paddingSm, styles.marginBottom]}
-          onPress={() => {}} // TODO:仮の値を入れている
+          onPress={() => {
+            navigation.navigate('Login');
+          }}
         >
           既存アカウントでログインする
         </Button>
