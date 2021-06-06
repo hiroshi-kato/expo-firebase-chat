@@ -2,6 +2,7 @@ import { useNavigation } from '@react-navigation/core';
 import React, { useState } from 'react';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { Button, Title, TextInput } from 'react-native-paper';
+import { auth } from '../../firebase';
 
 type Props = {};
 
@@ -9,6 +10,18 @@ export const LoginScreen: React.FC<Props> = (props) => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const signIn = () => {
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .then(() => {
+        console.log('sign in success');
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  };
+
   return (
     <SafeAreaView style={styles.flex}>
       <View style={[styles.flex, styles.paddingLarge]}>
@@ -32,7 +45,7 @@ export const LoginScreen: React.FC<Props> = (props) => {
         <Button
           mode='contained'
           style={[styles.paddingSm, styles.marginBottom]}
-          onPress={() => {}} //TODO: 仮の値を入れている
+          onPress={signIn}
         >
           ログイン
         </Button>

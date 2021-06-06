@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useNavigation } from '@react-navigation/core';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -7,6 +13,9 @@ import {
   View,
 } from 'react-native';
 import { GiftedChat, IMessage } from 'react-native-gifted-chat';
+import { Button } from 'react-native-paper';
+
+import { auth, db } from '../../firebase';
 
 const styles = StyleSheet.create({
   container: {
@@ -15,25 +24,53 @@ const styles = StyleSheet.create({
 });
 
 export const ChatScreen = () => {
+  const navigation = useNavigation();
+
+  const signOut = () => {
+    auth
+      .signOut()
+      .then(() => {
+        console.log('Sign out success');
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  };
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => <Button onPress={signOut}>ログアウト</Button>,
+    });
+  }, []);
+
   const [messages, setMessages] = useState<IMessage[]>([]);
 
-  useEffect(() => {
-    setMessages([
-      {
-        _id: 1,
-        text: 'hello developer',
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: 'react native',
-          avatar: 'https://placeimg.com/140/140/any',
-        },
-      },
-    ]);
+  useLayoutEffect(() => {
+    const unsubscribe = db
+      .collection('chats')
+      .orderBy('createdAt', 'desc')
+      .onSnapshot((snapshot) => {
+        setMessages(
+          snapshot.docs.map((doc) => ({
+            _id: doc.data()._id,
+            createdAt: doc.data().createdAt.toDate(),
+            text: doc.data().text,
+            user: doc.data().user,
+          }))
+        );
+      });
+    return unsubscribe;
   }, []);
 
   const onSend = useCallback((messages = []) => {
     setMessages((prevMessages) => GiftedChat.append(prevMessages, messages));
+    const { _id, createdAt, text, user } = messages[0];
+    db.collection('chats').add({
+      _id,
+      createdAt,
+      text,
+      user,
+    });
   }, []);
 
   return (
@@ -43,9 +80,8 @@ export const ChatScreen = () => {
         placeholder='メッセージを入力してください…'
         onSend={onSend}
         user={{
-          _id: 1,
-          name: 'me',
-          avatar: 'https://placeimg.com/140/140/any',
+          _id: auth?.currentUser?.email ?? 'Guest',
+          name: auth?.currentUser?.email ?? 'Guest',
         }}
       />
       {Platform.OS === 'android' && <KeyboardAvoidingView behavior='padding' />}

@@ -2,6 +2,7 @@ import { useNavigation } from '@react-navigation/core';
 import React, { useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { Button, TextInput, Title } from 'react-native-paper';
+import { auth } from '../../firebase';
 
 type Props = {};
 
@@ -9,6 +10,17 @@ export const SignUpScreen: React.FC<Props> = (props) => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const signUp = () => {
+    auth
+      .createUserWithEmailAndPassword(email, password)
+      .then(() => {
+        console.log('Register Success');
+      })
+      .catch((error: { message: any }) => {
+        console.error(error.message);
+      });
+  };
 
   return (
     <SafeAreaView style={styles.flex}>
@@ -32,7 +44,7 @@ export const SignUpScreen: React.FC<Props> = (props) => {
         <Button
           mode='contained'
           style={[styles.paddingSm, styles.marginBottom]}
-          onPress={() => {}} // TODO:仮の値を入れている
+          onPress={signUp}
         >
           新規登録
         </Button>
@@ -45,7 +57,6 @@ export const SignUpScreen: React.FC<Props> = (props) => {
           既存アカウントでログインする
         </Button>
       </View>
-      <Text>SignUpScreen</Text>
     </SafeAreaView>
   );
 };
